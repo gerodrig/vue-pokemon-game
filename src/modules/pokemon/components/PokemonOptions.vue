@@ -4,10 +4,13 @@
       v-for="{ name, id } in options"
       :key="id"
       @click="$emit('selectedOption', id)"
-      :class="{
+      :class="[
+      'capitalize disabled:shadow-none disabled:bg-gray-100',
+      {
         correct: id === correctAnswer && blockSelection,
         incorrect: id !== correctAnswer && blockSelection,
-      }"
+      }]"
+      :disabled="blockSelection"
     >
       {{ name }}
     </button>
