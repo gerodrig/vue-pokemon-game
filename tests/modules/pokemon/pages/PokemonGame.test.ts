@@ -89,20 +89,42 @@ describe('PokemonGame component', () => {
 
   test('Should render button for a new game when the game is over', () => {
     (usePokemonGame as Mock).mockReturnValue({
-        randomPokemon: pokemonOptions[0],
-        isLoading: false,
-        gameStatus: GameStatus.Won,
-        pokemonOptions,
-        checkAnswer: vi.fn(),
-        getNextRound: vi.fn(),
+      randomPokemon: pokemonOptions[0],
+      isLoading: false,
+      gameStatus: GameStatus.Won,
+      pokemonOptions,
+      checkAnswer: vi.fn(),
+      getNextRound: vi.fn(),
     });
 
     const wrapper = mount(PokemonGame);
-    console.log(wrapper.html());
-    // const button = wrapper.find('[data-test-id="btn-new-game"]');
+    // console.log(wrapper.html());
+    const button = wrapper.find('[data-test-id="btn-new-game"]');
 
     //? Assert: Checking the result
-    expect(true).toBe(true);
-    // expect(wrapper.get('button').text()).toBe('New Game');
-});
+    expect(button.text()).toBe('Play again?');
+  });
+
+  test('Should call the getNextRound function when button is clicked', async () => {
+    //? Arrange: Setting up the test
+    const spyNextRoundFn = vi.fn();
+
+    (usePokemonGame as Mock).mockReturnValue({
+      randomPokemon: pokemonOptions[0],
+      isLoading: false,
+      gameStatus: GameStatus.Won,
+      pokemonOptions,
+      checkAnswer: vi.fn(),
+      getNextRound: spyNextRoundFn,
+    });
+
+    const wrapper = mount(PokemonGame);
+    const button = wrapper.find('[data-test-id="btn-new-game"]');
+
+    await button.trigger('click');
+
+    //? Assert: Checking the result
+    expect(spyNextRoundFn).toHaveBeenCalled();
+    expect(spyNextRoundFn).toHaveBeenCalledWith(4);
+  });
 });
